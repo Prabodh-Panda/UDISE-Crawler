@@ -1,5 +1,7 @@
 import easyocr
+reader = easyocr.Reader(['en'])
 
-reader = easyocr.Reader(['ch_sim','en'])
-result = reader.readtext('captcha.png')
-print(result)
+def getCaptcha(url):
+    result = reader.readtext(url)
+    for (bbox, text, probability) in result:
+        return(text.replace(" ", ""))
