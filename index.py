@@ -1,10 +1,12 @@
 import time
 from tkinter.simpledialog import askstring
+from tkinter import messagebox
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
-import ocr
+import csv
+import xpaths
 
 service = Service(executable_path="./lib/chromedriver.exe")
 driver = webdriver.Chrome(service=service)
@@ -19,11 +21,7 @@ pincode = askstring("Pincode", "Please enter the pincode")
 search_field = driver.find_element(By.ID, "search")
 search_field.send_keys(pincode)
 
-captchaImg = driver.find_element(By.ID, "captchaId")
-captchaImg.screenshot("captcha.png")
-
-captcha = ocr.getCaptcha('captcha.png')
-# captcha = askstring("Captcha", "Please enter the captcha")
+captcha = askstring("Captcha", "Please enter the captcha")
 captcha_field = driver.find_element(By.NAME, "captcha")
 captcha_field.send_keys(captcha)
 
@@ -34,21 +32,35 @@ entries = Select(driver.find_element(By.NAME, "example_length"))
 entries.select_by_value("1000")
 
 links = driver.find_elements(By.CLASS_NAME, "clickLink")
+
+output = []
+
 for link in links:
     link.click()
     windows = driver.window_handles
     driver.switch_to.window(windows[1])
 
-    driver.save_screenshot("test.png")
-    elem = driver.find_element(By.ID)
-    # for header in headers:
-    #     print(header.text)
-    #     time.sleep(2)
-
-    time.sleep(5)
+    try:
+        data = {}
+        profile_keys = xpaths.school_profile.keys()
+        for key in profile_keys:
+            elem = driver.find_element(By.XPATH, xpaths.school_profile[key])
+            data[key] = elem.text
+        output.append(data)
+    except:
+        pass
 
     driver.close()
     driver.switch_to.window(windows[0])
 
-time.sleep(5)
+
+keys = output[0].keys()
+with open(f'{pincode}.csv', 'w', newline='') as output_file:
+    dict_writer = csv.DictWriter(output_file, keys)
+    dict_writer.writeheader()
+    dict_writer.writerows(output)
+
+messagebox.showinfo("Done", "Crawling Complete For Pincode: " + pincode)
+print(len(output))
+time.sleep(1)
 driver.quit()
