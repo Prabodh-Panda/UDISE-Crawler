@@ -42,11 +42,41 @@ for link in links:
 
     try:
         data = {}
+
         profile_keys = xpaths.school_profile.keys()
         for key in profile_keys:
             elem = driver.find_element(By.XPATH, xpaths.school_profile[key])
             data[key] = elem.text
+
+        driver.find_element(By.XPATH, xpaths.steps["basic"]).click()
+        time.sleep(1)
+        basic_keys = xpaths.basic_details.keys()
+        for key in basic_keys:
+            elem = driver.find_element(By.XPATH, xpaths.basic_details[key])
+            data[key] = elem.text
+
+        driver.find_element(By.XPATH, xpaths.steps["facilities"]).click()
+        time.sleep(1)
+        basic_keys = xpaths.facilities.keys()
+        for key in basic_keys:
+            elem = driver.find_element(By.XPATH, xpaths.facilities[key])
+            data[key] = elem.text
+
+        driver.find_element(By.XPATH, xpaths.steps["room"]).click()
+        time.sleep(1)
+        basic_keys = xpaths.room_details.keys()
+        for key in basic_keys:
+            elem = driver.find_element(By.XPATH, xpaths.room_details[key])
+            data[key] = elem.text
+
+        driver.find_element(By.XPATH, xpaths.steps["enrolment"]).click()
+        time.sleep(1)
+        basic_keys = xpaths.enrolment.keys()
+        for key in basic_keys:
+            elem = driver.find_element(By.XPATH, xpaths.enrolment[key])
+            data[key] = elem.text
         output.append(data)
+
     except:
         pass
 
@@ -60,7 +90,6 @@ with open(f'{pincode}.csv', 'w', newline='') as output_file:
     dict_writer.writeheader()
     dict_writer.writerows(output)
 
-messagebox.showinfo("Done", "Crawling Complete For Pincode: " + pincode)
-print(len(output))
+messagebox.showinfo("Done", f"Crawling Complete For Pincode: {pincode} \n Wrote {len(output)} lines of data")
 time.sleep(1)
 driver.quit()
