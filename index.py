@@ -48,29 +48,31 @@ for link in links:
             elem = driver.find_element(By.XPATH, xpaths.school_profile[key])
             data[key] = elem.text
 
+        delay = 0.5  # Wait for dropdown to open
+
         driver.find_element(By.XPATH, xpaths.steps["basic"]).click()
-        time.sleep(1)
+        time.sleep(delay)
         basic_keys = xpaths.basic_details.keys()
         for key in basic_keys:
             elem = driver.find_element(By.XPATH, xpaths.basic_details[key])
             data[key] = elem.text
 
         driver.find_element(By.XPATH, xpaths.steps["facilities"]).click()
-        time.sleep(1)
+        time.sleep(delay)
         basic_keys = xpaths.facilities.keys()
         for key in basic_keys:
             elem = driver.find_element(By.XPATH, xpaths.facilities[key])
             data[key] = elem.text
 
         driver.find_element(By.XPATH, xpaths.steps["room"]).click()
-        time.sleep(1)
+        time.sleep(delay)
         basic_keys = xpaths.room_details.keys()
         for key in basic_keys:
             elem = driver.find_element(By.XPATH, xpaths.room_details[key])
             data[key] = elem.text
 
         driver.find_element(By.XPATH, xpaths.steps["enrolment"]).click()
-        time.sleep(1)
+        time.sleep(delay)
         basic_keys = xpaths.enrolment.keys()
         for key in basic_keys:
             elem = driver.find_element(By.XPATH, xpaths.enrolment[key])
